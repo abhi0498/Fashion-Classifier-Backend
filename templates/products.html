@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      img {
+        max-width: 500px;
+        max-height: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <form action="/search" method="get">
+      <input type="text" name="term" id="term" />
+      <button>Submit</button>
+    </form>
+    <h1>From Amazon</h1>
+    {% for prod in data.products.Amazon %}
+
+    <img src="{{prod.img}}" alt="" />
+    <!-- <a href="{{prod.url}}">{{prod.name}}</a> -->
+
+    {% endfor %}
+    <h1>From Flipkart</h1>
+    {% for prod in data.products.Flipkart %}
+    <img src="{{prod.img}}" alt="" />
+    <!-- <a href="{{prod.url}}">{{prod.name}}</a> -->
+
+    {% endfor %}
+    <h1>From Myntra</h1>
+    {% for prod in data.products.Myntra %}
+    <img src="{{prod.img}}" alt="" />
+    <!-- <a href="{{prod.url}}">{{prod.name}}</a> -->
+
+    {% endfor %}
+  </body>
+</html>
