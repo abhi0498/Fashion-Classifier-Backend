@@ -1,4 +1,8 @@
 import requests
+import os
+
+if(not 'models' in os.listdir()):
+    os.mkdir('./models')
 
 
 def download_file_from_google_drive(id, destination):
