@@ -46,20 +46,8 @@ def get_Top3(arr, mode):
         return [[GENDER_CLASSES[i], f'{round(arr[0][i]*100,2)}'] for i in top3_indices]
 
 
-def predict(file_name):
+def predict(img):
     # img = load_img('./temp/'+file_name, target_size=(224, 224, 3))
-    img = load_img(file_name, target_size=(224, 224))
-    img = np.array([img_to_array(img)])
-    pred = {}
-    pred['colour'] = get_Top3(colour_model.predict(img), 'colour')
-    pred['article'] = get_Top3(article_model.predict(img), 'article')
-    pred['gender'] = get_Top3(gender_model.predict(img), 'gender')
-    return pred
-
-
-def predict_from_url(url):
-    # img = load_img('./temp/'+file_name, target_size=(224, 224, 3))
-    img = load_img(urlopen(url), target_size=(224, 224, 3))
     img = np.array(img)
     img = preprocess_input(img)
     img = np.array([img])
@@ -69,3 +57,13 @@ def predict_from_url(url):
     pred['gender'] = get_Top3(gender_model.predict(img), 'gender')
     return pred
 
+
+def predict_from_file(file):
+    img = load_img(file, target_size=(224, 224))
+    return predict(img)
+
+
+def predict_from_url(url):
+    # img = load_img('./temp/'+file_name, target_size=(224, 224, 3))
+    img = load_img(urlopen(url), target_size=(224, 224))
+    return predict(img)
