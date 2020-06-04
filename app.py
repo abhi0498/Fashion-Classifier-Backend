@@ -3,6 +3,7 @@ from predict import predict_from_file, predict_from_url
 from getProducts import get_all_products
 import json
 from flask_cors import CORS, cross_origin
+import os
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -22,8 +23,7 @@ def home():
     # @TODO change arg to ' '.join(pred)
     products = {}
     products = get_all_products(
-        pred['gender'][0][0] + ' ' + pred['colour']
-        [0][0] + ' ' + pred['article'][0][0])
+        pred['colour'][0][0] + ' ' + pred['gender'][0][0] + ' ' + pred['article'][0][0])
     return jsonify({'products': products, 'results': pred})
 
 
@@ -53,4 +53,6 @@ def url_search():
 
 
 if __name__ == "__main__":
+    if (not 'temp' in os.listdir()):
+        os.mkdir('temp')
     app.run(port=5000, debug=True)

@@ -14,14 +14,16 @@
 
 >python -i predict.py
 
-### In prompt call predict function like show below
+### In python REPL call predict function like show below
 
 > \>>   predict_from_url(\<Enter URL of image  Here\>)
+
+> \>>   predict_from_image(\<Enter path of JPEG image  in temp directory \>)
 
 ## Running Server
 
 > python app.py
 
-### Search(scarped results from flipkart, amazon, myntra)
+### Search(scraped results from flipkart, amazon, myntra)
 
 > Goto localhost:5000/api/search?term=\<Enter term here \>

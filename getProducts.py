@@ -9,6 +9,12 @@ from multiprocessing import Process, Queue
 import concurrent.futures
 
 
+op = webdriver.ChromeOptions()
+op.add_argument('headless')
+driver = Chrome(ChromeDriverManager(
+    chrome_type=ChromeType.GOOGLE).install(), options=op)
+
+
 class Product():
     def __init__(self, name='', img='', url=''):
         self.name = name
@@ -28,10 +34,6 @@ def get_products_myntra(term):
     try:
         term = term.replace('color', '')
         term = term.replace(' ', '-')
-        op = webdriver.ChromeOptions()
-        op.add_argument('headless')
-        driver = Chrome(ChromeDriverManager(
-            chrome_type=ChromeType.GOOGLE).install(), options=op)
         print('Loading webpage...')
 
         driver.get('https://www.myntra.com/{}'.format(term))
@@ -46,7 +48,6 @@ def get_products_myntra(term):
 
             products.append(Product(name, img, url))
 
-        driver.close()
     except e:
         print(e)
     finally:
@@ -57,10 +58,6 @@ def get_products_flipkart(term):
     products = []
 
     try:
-        op = webdriver.ChromeOptions()
-        op.add_argument('headless')
-        driver = Chrome(ChromeDriverManager(
-            chrome_type=ChromeType.GOOGLE).install(), options=op)
         print('Loading webpage...')
 
         driver.get('https://www.flipkart.com/search?q={}'.format(quote(term)))
@@ -72,7 +69,6 @@ def get_products_flipkart(term):
             img = r.find_element_by_tag_name('img').get_attribute('src')
             url = r.find_element_by_class_name('_2mylT6').get_attribute('href')
             products.append(Product(name, img, url))
-        driver.close()
     except e:
         print(e)
     finally:
@@ -84,26 +80,32 @@ def get_products_amazon(term):
 
     try:
 
-        op = webdriver.ChromeOptions()
-        op.add_argument('headless')
-        driver = Chrome(ChromeDriverManager(
-            chrome_type=ChromeType.GOOGLE).install(), options=op)
         print('Loading webpage...')
 
-        driver.get('https://www.amazon.in/s?k={}'.format(quote(term)))
+        driver.get('https://www.amazon.in/s?k={}'.format(quote_plus(term)))
 
         res = driver.find_elements_by_css_selector(".sg-col-inner")
 
         # skip  first 8 elements as they are not seacrh results
-        for r in tqdm(res[4:14]):
+        for i in tqdm(range(len(res[:20]))):
+            count = 0
+            try:
+                if (count == 10):
+                    break
+                name = '{} {}'.format(res[i].find_element_by_css_selector('.a-size-base-plus.a-color-base').text,
+                                      res[i].find_element_by_css_selector('.a-size-base-plus.a-color-base.a-text-normal').text)
+                img = res[i].find_element_by_tag_name(
+                    'img').get_attribute('src')
+                url = res[i].find_element_by_tag_name(
+                    'a').get_attribute('href')
 
-            name = '{} {}'.format(r.find_element_by_css_selector('.a-size-base-plus.a-color-base').text,
-                                  r.find_element_by_css_selector('.a-size-base-plus.a-color-base.a-text-normal').text)
-            img = r.find_element_by_tag_name('img').get_attribute('src')
-            url = r.find_element_by_tag_name('a').get_attribute('href')
+                products.append(Product(name, img, url))
+                count += 1
+            except e:
+                print(e)
+            finally:
+                continue
 
-            products.append(Product(name, img, url))
-        driver.close()
     except e:
         print(e)
     finally:
